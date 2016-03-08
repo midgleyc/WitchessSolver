@@ -220,13 +220,14 @@ string ws_dirsToCoords(string dirs) {
 	return result.substring(1);
 }
 
+// Submits the solution with a GET request.
 void ws_submit() {
 	string post_url = "witchess.php?sol=" + ws_submission + "&ajax=1&number=" + ws_puzzleTrueNum;
 	print(post_url);
 	ws_submission_response = visit_url(post_url, false);
 }
 
-// Solves the current puzzle in ws_page. STUB
+// Solves the current puzzle in ws_page.
 void ws_solve() {
 	if (ws_solns contains ws_puzzleTrueNum) {
 		string ws_soln_str = ws_solns[ws_puzzleTrueNum];
