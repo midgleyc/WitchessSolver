@@ -21,5 +21,24 @@ int ws_puzzle_num = 1;
 // Buffer that represents the current puzzle
 buffer ws_page = visit_url("witchess.php?num=" + puzzle_num);
 
+// Whether or not the current puzzle is solved.
+boolean ws_puzzleDone() {
+
+}
+
+// Whether or not the current puzzle has a next.
+boolean ws_puzzleHasNext() {
+
+}
+
+// Loads the next puzzle.
+void ws_loadNext() {
+	ws_puzzle_num = 
+	ws_page = visit_url("witchess.php?num=" + puzzle_num);
+}
+
 // Parses the next puzzle.
-ws_parseNext()
+void ws_parseNext() {
+	ws_puzzle_num = 
+	ws_page = visit_url("witchess.php?num=" + puzzle_num);
+}
