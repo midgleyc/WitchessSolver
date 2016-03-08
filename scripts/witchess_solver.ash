@@ -83,7 +83,6 @@ boolean ws_puzzleDone() {
 	}
 }
 
-
 // Whether or not the current puzzle has a next.
 boolean ws_puzzleHasNext() {
 	if (ws_puzzleNum == 0) {
@@ -116,10 +115,25 @@ void ws_loadNext() {
                 PARSING
         understanding the problem
 *****************************************/
+// The size of the puzzle.
+int ws_puzzleDim = 0;
+
+// Matcher for the end square (x long)
+string ws_matcher_end_square_regex = '(\\d+)\"\\W+class=\"corner end\">';
+matcher ws_matcher_end_square = create_matcher(ws_matcher_end_square_regex, ws_page);
+
+// Sets the correct dimensions
+void ws_setPuzzleMaxLims() {
+	if (ws_puzzleNum > 0) {
+		reset(ws_matcher_end_square, ws_page);
+		ws_matcher_end_square.find();
+		ws_puzzleDim = ws_matcher_end_square.group(1).to_int() / 2;
+	}
+}
 
 // Parses the current puzzle in ws_page. STUB
 void ws_parse() {
-	//print(ws_page);
+	ws_setPuzzleMaxLims();
 }
 
 /*****************************************
@@ -132,33 +146,127 @@ string ws_soln_path = "witchess_puzzle_solns.txt";
 // Solution map
 string[int] ws_solns;
 
+// String of GET coordinates
+string ws_submission = "";
+
+// Buffer of GET coordinate response
+buffer ws_submission_response;
+
 // Loads the solution map into the current session
 void ws_loadSolutions() {
 	file_to_map(ws_soln_path , ws_solns);
 }
 
-// tests whether or not a given solution string is square.
+// Matcher for the dir-to-coord conversion over the current puzzle
+matcher ws_matcher_rludConvert = create_matcher("([rlud])", "");
+
+// Converts a set of dirs for the current puzzle to a coordinate set.
+string ws_dirsToCoords(string dirs) {
+	dirs = to_lower_case(dirs);
+	int x = ws_puzzleDim * 2;
+	int y = 0;
+	int writeX = 0;
+	int writeY = 0;
+
+	int[string] path; 
+
+	ws_matcher_rludConvert.reset(dirs);
+	while (ws_matcher_rludConvert.find()) {
+		string dir = ws_matcher_rludConvert.group(1);
+		switch (dir) {
+			case "r":
+				writeY = y + 1;
+				y = writeY + 1;
+				writeX = x;
+				break;
+			case "l":
+				writeY = y - 1;
+				y = writeY - 1;
+				writeX = x;
+				break;
+			case "u":
+				writeX = x - 1;
+				x = writeX - 1;
+				writeY = y;
+				break;
+			case "d":
+				writeX = x + 1;
+				x = writeX + 1;
+				writeY = y;
+				break;
+			default:
+				ws_throwErr("Unrecognized direction: \"" + dir + "\"");
+				break;
+		}
+		if (x < 0 || x > ws_puzzleDim * 2 || y < 0 || y > ws_puzzleDim * 2) {
+			ws_throwErr("Soution out of bounds!");
+			return "";
+		}
+		path[writeX + "," + writeY] = 0;
+	}
+
+	if (x != 0 || y != ws_puzzleDim * 2) {
+		ws_throwErr("Soution is not square!");
+		return "";
+	}
+
+	sort path by index;
+
+	string result = "";
+	foreach coord, val in path {
+		result += "|" + coord;
+	}
+
+	return result.substring(1);
+}
+
+void ws_submit() {
+	string post_url = "witchess.php?sol=" + ws_submission + "&ajax=1&number=" + ws_puzzleTrueNum;
+	print(post_url);
+	ws_submission_response = visit_url(post_url, false);
+}
+
+// Solves the current puzzle in ws_page. STUB
+void ws_solve() {
+	if (ws_solns contains ws_puzzleTrueNum) {
+		string ws_soln_str = ws_solns[ws_puzzleTrueNum];
+		ws_submission = ws_dirsToCoords(ws_soln_str);
+		print("Solution: " + ws_soln_str + " -> " + ws_submission);
+		ws_submit();
+	} else {
+		ws_throwErr("Solution for #"+ ws_puzzleTrueNum +" not found in lookup!");
+	}
+}
+
+/*****************************************
+                SANITY
+         checking our answers
+*****************************************/
+// Matcher for the square-sanity check
+matcher ws_matcher_soln_sanity = create_matcher("([rlud])", "");
+
+// tests whether or not a given solution string is square. (static)
 boolean ws_is_square(string soln) {
 	int x = 0;
 	int y = 0;
 	int maxX = 0;
 	int maxY = 0;
 	boolean sane = true;
-	matcher matcher_soln_sanity = create_matcher("([rlud])", soln);
-	while (matcher_soln_sanity.find()) {
-		string dir = matcher_soln_sanity.group(1);
+	ws_matcher_soln_sanity.reset(soln);
+	while (ws_matcher_soln_sanity.find()) {
+		string dir = ws_matcher_soln_sanity.group(1);
 		switch (dir) {
 			case "r":
-				x += 1;
-				break;
-			case "l":
-				x -= 1;
-				break;
-			case "u":
 				y += 1;
 				break;
-			case "d":
+			case "l":
 				y -= 1;
+				break;
+			case "u":
+				x += 1;
+				break;
+			case "d":
+				x -= 1;
 				break;
 			default:
 				ws_throwErr("Unrecognized direction: \"" + dir + "\"");
@@ -176,16 +284,6 @@ boolean ws_is_square(string soln) {
 		print("y: " + y);
 	}
 	return sane;
-}
-
-// Parses the current puzzle in ws_page. STUB
-void ws_solve() {
-	if (ws_solns contains ws_puzzleTrueNum) {
-		string ws_soln_str = ws_solns[ws_puzzleTrueNum];
-		print("Solution: " + ws_soln_str);
-	} else {
-		ws_throwErr("Solution for #"+ ws_puzzleTrueNum +" not found in lookup!");
-	}
 }
 
 /*****************************************
