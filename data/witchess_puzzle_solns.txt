@@ -1,0 +1,43 @@
+1	r r u u u u r r
+2	r r r u u l d l l u r u r r u r
+3	r u u r r d d r u u u l l l l u r r r r
+4	r u u u u r r d d r u u
+5	r r r u u r u u
+6	u r r r d r r u l u r u l l d l l l u r r u u r d r u r
+7	r r r r u l l l l u u u r d d r r u u r
+8	u r r u l u u r d r d r u u
+9	r r r r u l u u l u r r
+10	u u u u r r d l d d r d r r u u u u
+11	u r r u l u u r d r d d r u u u
+12	r r r u l u u u l d d l u u u r r r d d d r d d r u u u l u u r
+13	r r u r r u u l d l l u l u r r r r
+14	r r r u u u l d d l u u u r r r
+15	u u r u u r d d d d r r u l u u r u
+16	u u u u r d r d d l d r r u r u u l u r
+17	r r u l u u r d r u u r
+18	r r u l u l u r r r d d d r u u u u
+19	r u u r u r d d l d r r u u u u
+20	r r u u l l u r r u r d d d r u u u
+21	r r u u r r u u
+22	r r r r u l l u l l u r r r d r u u
+23	u r r u l u l u r r d r r d d r u u u l l u r r
+24	u r r u r r d l d r r u u u l l l l d l u u u r r d r u r d r u
+25	u u u u r r d d d d r r r u l l u u u u r r
+26	u r r u l u u r r d d r u u
+27	r u u u u r d r d l d r d r u u u u
+28	r u u r d d r u r u l u l l l u r r r r
+29	r u r r u r u l l d l l u u r r r r
+30	u u u u r r d l d d d r u u r r u u
+32	u u u u u r r d l d d r u r u u r d d d l d l d r r u r u u u u
+33	r r r u l l u l u r r d r r d d r u u r u l l l u l u u r d r r d r u u
+34	r r r r u u r u r u u u l l l l d d d d d l u u u u u u r r r r r r
+35	r u r d r r u u u l d l u u r r
+36	r u u u l u r r d d d d r r u l u u u r
+37	r r r u l l u u r r d r u u
+38	r u r u u l d l u u r u r d r u r d d l d r d l d r r u u u u u
+39	r u r r u r u u l l d d l l u u u r r r r r
+40	u r d r r r u r u u l d l d l u l u l u r u r d d r u u r d r u
+54	u u u u u u u r r r r r d l l d r r d l l d l u u u l d d d d d r d r r r r u r u l u u u u u r
+67	r u u u r u u r r r d l d l d d l d r r r u l u r u r u u u
+76	r r r r r r u l l l u u u l l d r d l l u u u u r r d r r d d d r r u u l u u r
+89	u u u u u u u u r r r r d l l d d l d r d d l d r d r r r r u l l l u r r r r r u l l l l u u u r u u r d r d l d l d r r r u u u u
