@@ -292,8 +292,9 @@ boolean ws_is_square(string soln) {
         lights, camera, action!
 *****************************************/
 
-// Solves all the witchess puzzles
-void main() {
+// Attempts all the witchess puzzles and returns true if successful.
+boolean ws_run() {
+	boolean success = true;
 	ws_loadSolutions();
 	foreach key in ws_solns {
 		if (!ws_is_square(ws_solns[key])) {
@@ -308,9 +309,19 @@ void main() {
 		}
 		if (!ws_puzzleDone()) {
 			ws_throwErr("Could not solve puzzle " + ws_puzzleNum + ". (#" + ws_puzzleTrueNum + ")");
+			success = false;
 		} else {
 			print("Puzzle " + ws_puzzleNum + " complete. (#" + ws_puzzleTrueNum + ")", "green");
 		}
 	}
-	print("Witchess puzzles finished.", "green");
+	
+	return success;
+}
+
+void main() {
+	if (ws_run()) {
+		print("Witchess puzzles finished.", "green");
+	} else {
+		ws_throwErr("Could not complete all witchess puzzles.");
+	}
 }
