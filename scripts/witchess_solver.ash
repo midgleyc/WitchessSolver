@@ -102,7 +102,7 @@ boolean ws_puzzleHasNext() {
 void ws_setPuzzleTrueNum() {
 	ws_matcher_trueNum.reset(ws_page);
 	ws_matcher_trueNum.find();
-	ws_puzzleTrueNum = group(ws_matcher_trueNum, 1).to_int();
+	ws_puzzleTrueNum = ws_matcher_trueNum.group(1).to_int();
 }
 
 // Gets the next puzzle.
@@ -126,10 +126,66 @@ void ws_parse() {
                 SOLVING
           solving the problem
 *****************************************/
+// Lookup table of known solutions
+string ws_soln_path = "witchess_puzzle_solns.txt";
+
+// Solution map
+string[int] ws_solns;
+
+// Loads the solution map into the current session
+void ws_loadSolutions() {
+	file_to_map(ws_soln_path , ws_solns);
+}
+
+// tests whether or not a given solution string is square.
+boolean ws_is_square(string soln) {
+	int x = 0;
+	int y = 0;
+	int maxX = 0;
+	int maxY = 0;
+	boolean sane = true;
+	matcher matcher_soln_sanity = create_matcher("([rlud])", soln);
+	while (matcher_soln_sanity.find()) {
+		string dir = matcher_soln_sanity.group(1);
+		switch (dir) {
+			case "r":
+				x += 1;
+				break;
+			case "l":
+				x -= 1;
+				break;
+			case "u":
+				y += 1;
+				break;
+			case "d":
+				y -= 1;
+				break;
+			default:
+				ws_throwErr("Unrecognized direction: \"" + dir + "\"");
+				break;
+		}
+		sane = sane && !(x < 0 || y < 0);
+		maxX = max(x, maxX);
+		maxY = max(y, maxY);
+	}
+	sane = (x == y) && sane;
+	sane = (x == maxX) && sane;
+	sane = (x == maxY) && sane;
+	if (!sane) {
+		print("x: " + x);
+		print("y: " + y);
+	}
+	return sane;
+}
 
 // Parses the current puzzle in ws_page. STUB
 void ws_solve() {
-	print(ws_page);
+	if (ws_solns contains ws_puzzleTrueNum) {
+		string ws_soln_str = ws_solns[ws_puzzleTrueNum];
+		print("Solution: " + ws_soln_str);
+	} else {
+		ws_throwErr("Solution for #"+ ws_puzzleTrueNum +" not found in lookup!");
+	}
 }
 
 /*****************************************
@@ -139,16 +195,23 @@ void ws_solve() {
 
 // Solves all the witchess puzzles
 void main() {
+	ws_loadSolutions();
+	foreach key in ws_solns {
+		if (!ws_is_square(ws_solns[key])) {
+			ws_throwErr("Warning: non-square solution at key " + key);
+		}
+	}
 	while (ws_puzzleHasNext()) {
 		ws_loadNext();
 		if (!ws_puzzleDone()) {
 			ws_parse();
 			ws_solve();
-			if (!ws_puzzleDone()) {
-				ws_throwErr("Could not solve puzzle " + ws_puzzleNum + ". (#" + ws_puzzleTrueNum + ")");
-			}
 		}
-		print("Puzzle " + ws_puzzleNum + " complete. (#" + ws_puzzleTrueNum + ")", "green");
+		if (!ws_puzzleDone()) {
+			ws_throwErr("Could not solve puzzle " + ws_puzzleNum + ". (#" + ws_puzzleTrueNum + ")");
+		} else {
+			print("Puzzle " + ws_puzzleNum + " complete. (#" + ws_puzzleTrueNum + ")", "green");
+		}
 	}
 	print("Witchess puzzles finished.", "green");
 }
