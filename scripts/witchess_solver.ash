@@ -10,7 +10,16 @@ script "witchess_solver.ash";
 **********************************************/
 
 // Whether or not we should look for the minimum path (by default, false). Set with "set solvewitchess_golf = true/false"
-boolean golf = false || get_property("solvewitchess_golf").to_boolean();
+boolean ws_golf = false || get_property("solvewitchess_golf").to_boolean();
 
 // Whether or not we should log solutions (by default, false). Set with "set solvewitchess_log_soln = true/false"
-boolean log_soln = false || get_property("solvewitchess_log_soln").to_boolean();
+boolean ws_log_soln = false || get_property("solvewitchess_log_soln").to_boolean();
+
+// Current witchess puzzle
+int ws_puzzle_num = 1;
+
+// Buffer that represents the current puzzle
+buffer ws_page = visit_url("witchess.php?num=" + puzzle_num);
+
+// Parses the next puzzle.
+ws_parseNext()
