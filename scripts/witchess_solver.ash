@@ -118,7 +118,7 @@ void ws_load() {
 // Gets the next puzzle.
 void ws_loadNext() {
 	ws_next();
-	ws_loadNext();
+	ws_load();
 }
 
 /*****************************************
