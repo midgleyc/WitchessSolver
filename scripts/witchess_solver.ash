@@ -104,11 +104,21 @@ void ws_setPuzzleTrueNum() {
 	ws_puzzleTrueNum = ws_matcher_trueNum.group(1).to_int();
 }
 
-// Gets the next puzzle.
-void ws_loadNext() {
+// Forwards the count.
+void ws_next() {
 	ws_puzzleNum += 1;
+}
+
+// Gets the puzzle.
+void ws_load() {
 	ws_page = visit_url("witchess.php?num=" + ws_puzzleNum);
 	ws_setPuzzleTrueNum();
+}
+
+// Gets the next puzzle.
+void ws_loadNext() {
+	ws_next();
+	ws_loadNext();
 }
 
 /*****************************************
@@ -237,6 +247,7 @@ void ws_solve() {
 	} else {
 		ws_throwErr("Solution for #"+ ws_puzzleTrueNum +" not found in lookup!");
 	}
+	ws_load();
 }
 
 /*****************************************
