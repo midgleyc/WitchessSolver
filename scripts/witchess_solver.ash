@@ -125,19 +125,29 @@ void ws_loadNext() {
                 PARSING
         understanding the problem
 *****************************************/
-// The size of the puzzle.
-int ws_puzzleDim = 0;
+// The length of the puzzle.
+int ws_puzzleDimX = 0;
+
+// The height of the puzzle.
+int ws_puzzleDimY = 0;
 
 // Matcher for the end square (x long)
-string ws_matcher_end_square_regex = '(\\d+)\"\\W+class=\"corner end\">';
+string ws_matcher_end_square_regex = '(\\d+)\"\\W+class=\"corner end\"';
 matcher ws_matcher_end_square = create_matcher(ws_matcher_end_square_regex, ws_page);
+
+// Matcher for the end square (y long)
+string ws_matcher_start_square_regex = '(\\d+),0\"\\W+class=\"corner start\"';
+matcher ws_matcher_start_square = create_matcher(ws_matcher_start_square_regex, ws_page);
 
 // Sets the correct dimensions
 void ws_setPuzzleMaxLims() {
 	if (ws_puzzleNum > 0) {
 		reset(ws_matcher_end_square, ws_page);
+		reset(ws_matcher_start_square, ws_page);
 		ws_matcher_end_square.find();
-		ws_puzzleDim = ws_matcher_end_square.group(1).to_int() / 2;
+		ws_matcher_start_square.find();
+		ws_puzzleDimX = ws_matcher_end_square.group(1).to_int() / 2;
+		ws_puzzleDimY = ws_matcher_start_square.group(1).to_int() / 2;
 	}
 }
 
@@ -173,7 +183,7 @@ matcher ws_matcher_rludConvert = create_matcher("([rlud])", "");
 // Converts a set of dirs for the current puzzle to a coordinate set.
 string ws_dirsToCoords(string dirs) {
 	dirs = to_lower_case(dirs);
-	int x = ws_puzzleDim * 2;
+	int x = ws_puzzleDimX * 2;
 	int y = 0;
 	int writeX = 0;
 	int writeY = 0;
@@ -208,15 +218,15 @@ string ws_dirsToCoords(string dirs) {
 				ws_throwErr("Unrecognized direction: \"" + dir + "\"");
 				break;
 		}
-		if (x < 0 || x > ws_puzzleDim * 2 || y < 0 || y > ws_puzzleDim * 2) {
+		if (x < 0 || x > ws_puzzleDimX * 2 || y < 0 || y > ws_puzzleDimY * 2) {
 			ws_throwErr("Soution out of bounds!");
 			return "";
 		}
 		path[writeX + "," + writeY] = 0;
 	}
 
-	if (x != 0 || y != ws_puzzleDim * 2) {
-		ws_throwErr("Soution is not square!");
+	if (x != 0 || y != ws_puzzleDimY * 2) {
+		ws_throwErr("Soution does not correctly terminate!");
 		return "";
 	}
 
@@ -257,8 +267,8 @@ void ws_solve() {
 // Matcher for the square-sanity check
 matcher ws_matcher_soln_sanity = create_matcher("([rlud])", "");
 
-// tests whether or not a given solution string is square. (static)
-boolean ws_is_square(string soln) {
+// tests whether or not a given solution string is rectangular. (static)
+boolean ws_is_rect(string soln) {
 	int x = 0;
 	int y = 0;
 	int maxX = 0;
@@ -288,12 +298,14 @@ boolean ws_is_square(string soln) {
 		maxX = max(x, maxX);
 		maxY = max(y, maxY);
 	}
-	sane = (x == y) && sane;
+	// sane = (x == y) && sane; // Some puzzles are discovered to be non-square.
 	sane = (x == maxX) && sane;
-	sane = (x == maxY) && sane;
+	sane = (y == maxY) && sane;
 	if (!sane) {
-		print("x: " + x);
-		print("y: " + y);
+		print("x : " + x);
+		print("y : " + y);
+		print("x+: " + maxX);
+		print("y+: " + maxY);
 	}
 	return sane;
 }
@@ -308,8 +320,8 @@ boolean ws_run() {
 	boolean success = true;
 	ws_loadSolutions();
 	foreach key in ws_solns {
-		if (!ws_is_square(ws_solns[key])) {
-			ws_throwErr("Warning: non-square solution at key " + key);
+		if (!ws_is_rect(ws_solns[key])) {
+			ws_throwErr("Warning: non-rect-bounded solution at key " + key);
 		}
 	}
 	while (ws_puzzleHasNext()) {
