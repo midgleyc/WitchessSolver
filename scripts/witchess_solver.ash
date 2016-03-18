@@ -183,10 +183,12 @@ matcher ws_matcher_rludConvert = create_matcher("([rlud])", "");
 // Converts a set of dirs for the current puzzle to a coordinate set.
 string ws_dirsToCoords(string dirs) {
 	dirs = to_lower_case(dirs);
-	int x = ws_puzzleDimX * 2;
+	int x = ws_puzzleDimY * 2;
 	int y = 0;
 	int writeX = 0;
 	int writeY = 0;
+
+	int move = 0;
 
 	int[string] path; 
 
@@ -218,16 +220,21 @@ string ws_dirsToCoords(string dirs) {
 				ws_throwErr("Unrecognized direction: \"" + dir + "\"");
 				break;
 		}
+
+		move += 1;
+
 		if (x < 0 || x > ws_puzzleDimX * 2 || y < 0 || y > ws_puzzleDimY * 2) {
-			ws_throwErr("Soution out of bounds!");
+			ws_throwErr("Soution out of bounds! x:" + x/2 + " y:" + y/2);
+			ws_throwErr("dimX: " + ws_puzzleDimX + " dimY:" + ws_puzzleDimY);
+			ws_throwErr("Error occurs at move " + move);
 			return "";
 		}
 		path[writeX + "," + writeY] = 0;
 	}
 
 	if (x != 0 || y != ws_puzzleDimY * 2) {
-		ws_throwErr("Soution does not correctly terminate!");
-		return "";
+		ws_throwErr("Soution does not correctly terminate! x:" + x/2 + " y:" + y/2);
+		ws_throwErr("dimX: " + ws_puzzleDimX + " dimY:" + ws_puzzleDimY);
 	}
 
 	sort path by index;
