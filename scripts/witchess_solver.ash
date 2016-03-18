@@ -223,8 +223,8 @@ string ws_dirsToCoords(string dirs) {
 
 		move += 1;
 
-		if (x < 0 || x > ws_puzzleDimX * 2 || y < 0 || y > ws_puzzleDimY * 2) {
-			ws_throwErr("Soution out of bounds! x:" + x/2 + " y:" + y/2);
+		if (x < 0 || x > ws_puzzleDimY * 2 || y < 0 || y > ws_puzzleDimX * 2) {
+			ws_throwErr("Solution out of bounds! x:" + x + " y:" + y);
 			ws_throwErr("dimX: " + ws_puzzleDimX + " dimY:" + ws_puzzleDimY);
 			ws_throwErr("Error occurs at move " + move);
 			return "";
@@ -232,8 +232,8 @@ string ws_dirsToCoords(string dirs) {
 		path[writeX + "," + writeY] = 0;
 	}
 
-	if (x != 0 || y != ws_puzzleDimY * 2) {
-		ws_throwErr("Soution does not correctly terminate! x:" + x/2 + " y:" + y/2);
+	if (x != 0 || y != ws_puzzleDimX * 2) {
+		ws_throwErr("Solution does not correctly terminate! x:" + x + " y:" + y);
 		ws_throwErr("dimX: " + ws_puzzleDimX + " dimY:" + ws_puzzleDimY);
 	}
 
