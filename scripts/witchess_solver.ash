@@ -333,10 +333,10 @@ boolean ws_run() {
 	}
 	while (ws_puzzleHasNext()) {
 		ws_loadNext();
-		//if (!ws_puzzleDone()) {
+		if (!ws_puzzleDone()) {
 			ws_parse();
 			ws_solve();
-		//}
+		}
 		if (!ws_puzzleDone()) {
 			ws_throwErr("Could not solve puzzle " + ws_puzzleNum + ". (#" + ws_puzzleTrueNum + ")");
 			success = false;
