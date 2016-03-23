@@ -2,6 +2,7 @@ script "witchess.ash";
 notify digitrev;
 
 import <witchess_solver.ash>
+import <htmlform.ash>
 
 buffer witchess(buffer page) {
 	ws_loadSolutions();
@@ -35,8 +36,15 @@ buffer witchess(buffer page) {
 	return page;
 }
 
+buffer add_button(buffer page){
+	page.replace_string('<form method="post" action="witchess.php" id="results">',
+		'<form name="relayform" method="POST" action=""><input type="submit" class="button" value="Show Solution" name="showsoln"></form><form method="post" action="witchess.php" id="results">');
+	if (form_field("showsoln") != "") page.witchess();
+	return page;
+}
+
 void main() {
-	visit_url().witchess().write();
+	visit_url().add_button().write();
 }
 
 /*
