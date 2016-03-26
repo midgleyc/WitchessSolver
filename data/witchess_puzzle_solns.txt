@@ -68,7 +68,7 @@
 68	r r u l u u u r d d r d d r u u u u
 69	r r u r u r r u l l l l d d l u u u r r r r r u
 70	r u u u u u l u r r r d l d d d d d r u u r u u u u r d d d d d d r u u u u u u
-71	u u r r r r r r u u u u l l l l d d d l u u l u r u r u r d r r u r u d d d d d d l l l l l l d r r r r r r r u u u u u u u u
+71	u u u u u u r d d d d d d r u u u u u u r r r r d d d d l l l d r r d r u r u r u l u u r u l u l l l l l u r r r r r r
 72	u u r d d r u r d r u r u l u l d l u l l u r u r d r u r d r u
 73	u r r u u r d d r r u l u r u l l l l d d l u u u r r r r r
 74	u u u u u u u r r r r r r d d d d d d l l l l u u u u r r d l d d r r u u u u l l l l d d d d d d r r r r r r u u u u u u u
