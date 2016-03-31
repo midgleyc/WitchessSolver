@@ -2,7 +2,6 @@ script "witchess.ash";
 notify digitrev;
 
 import <witchess_solver.ash>
-import <htmlform.ash>
 
 buffer witchess(buffer page) {
 	ws_loadSolutions();
